@@ -6,36 +6,22 @@ library(ggplot2)
 library(patchwork)
 
 ### Read dataset ###
-sp_matrix <- read_excel("Dataframe_macrotemporal.xlsx", sheet = "Phylogenetic_diversity")
+env_data_pd <- read_excel("Dataframe_macrotemporal.xlsx", sheet = "Phylogenetic_diversity")
 
 ### Step 1: Summaries and statistical tests ###
 
 # Wilcoxon tests
-wilcox.test(SESpd_richness ~ Period_2002, data = pd_res)
-wilcox.test(SESpd_swap ~ Period_2002, data = pd_res)
+wilcox.test(SESpd_richness ~ Period_2002, data = env_data_pd)
+wilcox.test(SESpd_swap ~ Period_2002, data = env_data_pd)
 
 ### Step 1.1: Merge with environemtnal data and model fit ###
-# Prepare data for GAM
-# Collapse the original data to one row per SampleID_PD to get environmental variables
+# Prepare data for GAMMs
 
-env_data_pd <- dat %>%
-  group_by(SampleID_PD) %>%
-  summarise(
-    Pollution = mean(Pollution, na.rm = TRUE),
-    Precipitation = mean(Precipitation, na.rm = TRUE), 
-    Wind = mean(Wind, na.rm = TRUE),                   
-    Year = first(Year),
-    Policy.period = first(Policy_period),
-    Woody.species = first(Woody.species),
-    Site = first(Site),             
-    .groups = "drop"
-  ) %>%
-  inner_join(pd_res, by = "SampleID_PD") %>%
+env_data_pd <- env_data_pd %>%
   mutate(
-    Year_factor = as.factor(Year),
-    Site = as.factor(Site), 
-    Woody.species = as.factor(Woody.species),
-    Policy.period = factor(Policy.period, levels = c("Before2002", "After2002"))
+    Year_factor  = factor(Year),
+    Site         = factor(Site),
+    Woody.species = factor(Woody.species)
   )
 
 ### Step 2: Run the hypothesis GAMMs ###

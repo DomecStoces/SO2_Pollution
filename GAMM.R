@@ -18,9 +18,9 @@ library(corrplot)
 library(car)
 
 ### Read dataset ###
-format1 <- read_excel("Dataframe_microtemporal.xlsx")
+abundance_richness_df <- read_excel("Dataframe_microtemporal.xlsx")
 
-# Set correct factor levels for modelling
+### Step 1: Set correct factor levels for modelling ###
 abundance_richness_df$Woody.species <- as.factor(abundance_richness_df$Woody.species)
 abundance_richness_df$Year_factor <- as.factor(abundance_richness_df$Year)
 abundance_richness_df$Month <- as.numeric(abundance_richness_df$Month)
