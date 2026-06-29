@@ -23,8 +23,9 @@ abundance_richness_df <- read_excel("Dataframe_microtemporal.xlsx")
 ### Step 1: Set correct factor levels for modelling ###
 abundance_richness_df$Woody.species <- as.factor(abundance_richness_df$Woody.species)
 abundance_richness_df$Year_factor <- as.factor(abundance_richness_df$Year)
+abundance_richness_df$Site <- as.factor(abundance_richness_df$Site)
 abundance_richness_df$Month <- as.numeric(abundance_richness_df$Month)
-abundance_richness_df$Date <- as.Date(abundance_richness_df$Date, format = "%Y-%m-%d")
+
 
 ### Step 2: Multicollinearity checks ###
 # 2.1) Spearman's rank correlation for non-linear predictors
