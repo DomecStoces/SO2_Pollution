@@ -12,68 +12,15 @@ library(factoextra)
 library(ggplot2)
 
 ### Read dataset ###
-#####
-format1 <- read_excel("Dataframe_microtemporal.xlsx")
+cwm_df <- read_excel("Dataframe_microtemporal.xlsx",sheet = "Sheet1")
 
-# Step 1: Compute relative abundance per sample ###
-trait_scores <- format1 %>%
-  mutate(
-    # Sample ID
-    SampleID = paste(Time.period, Site, sep = "_"),
-    
-    ## 1) Ordinal trait ranks (raw 1..k)
-    Diet_rank = dplyr::recode(trimws(Dietary),
-                              "G" = 1,  
-                              "O" = 2,  
-                              "P" = 3,  
-                              .default = NA_real_),
-    
-    Wing_rank = dplyr::recode(trimws(Wing.m),
-                              "B"    = 1,
-                              "M/B"  = 2,
-                              "M"    = 3,
-                              .default = NA_real_),
-  
-    # Continuous trait: body size
-    Size_score = as.numeric(as.character(Size))
-  ) %>%
-  ## 2) Rescale all ordinal ranks to 0–1
-mutate(
-  Diet_score   = scales::rescale(Diet_rank,   to = c(0, 1)),
-  Wing_score   = scales::rescale(Wing_rank,   to = c(0, 1)))
-
-### Step 2: Retain species in summary ###
-cwm_df <- trait_scores %>%
-  group_by(SampleID) %>%
-  summarise(
-    CWM_Diet    = weighted.mean(Diet_score,   Number, na.rm = TRUE),
-    CWM_Wing    = weighted.mean(Wing_score,   Number, na.rm = TRUE),
-    CWM_Size    = weighted.mean(Size_score,   Number, na.rm = TRUE),
-    
-    # Site-level environment
-    Pollution      = mean(Pollution,      na.rm = TRUE),
-    T              = mean(T,              na.rm = TRUE),
-    Wind           = mean(Wind,           na.rm = TRUE),
-    Precipitation  = mean(Precipitation,  na.rm = TRUE),
-    
-    # Temporal identifiers
-    Month         = dplyr::first(Month),
-    Year          = dplyr::first(Year),
-    Site          = dplyr::first(Site),
-    Policy_period = dplyr::first(Policy_period),
-    Woody.species = dplyr::first(Woody.species),
-    Time.period   = dplyr::first(Time.period),
-    .groups = "drop"
-  )
-cwm_df <- cwm_df %>% arrange(Time.period, Site)
-
-### Step 3: Convert grouping variables to factors for mgcv ###
+### Step 1: Convert grouping variables to factors for mgcv ###
 cwm_df$Woody.species <- as.factor(cwm_df$Woody.species)
 cwm_df$Year_factor   <- as.factor(cwm_df$Year)
 cwm_df$Month         <- as.numeric(cwm_df$Month)
 cwm_df$Site          <- as.numeric(cwm_df$Site)
 
-### Step 3: Fit GAMM Models for each trait ###
+### Step 2: Fit GAMM Models for each trait ###
 # Note: Temperate was dropped, because it was confounded with Month variable.
 # Observed collinearity, model fit was not well behaving.
 
