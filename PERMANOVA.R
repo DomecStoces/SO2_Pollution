@@ -15,6 +15,9 @@ library(permute)
 # Read species matrix: rows = samples, columns = species, values = total abundance
 sp_matrix <- read_excel("Dataframe_macrotemporal.xlsx", sheet = "sp_matrix")
 
+# Convert to data frame and set rownames
+sp_df <- as.data.frame(sp_matrix)
+
 ### Step 2: Read environmental metadata ###
 env_data <- read_excel("Dataframe_macrotemporal.xlsx", sheet = "env_data")
 
