@@ -1,4 +1,8 @@
-### Packages ###
+# -------------------------------------------------------------------------
+#CWMs and FD Rao's Q: to test Time series (Time.period) with Site (n=9)
+#Will environmental filtering reduce or increase increase overall functional 
+# diversity with driving severe directional shifts in isolated traits?
+# -------------------------------------------------------------------------
 
 library(dplyr)
 library(tidyr)
