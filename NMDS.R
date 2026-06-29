@@ -1,4 +1,4 @@
-#vegan::NMDS based on community matrix of vegan::PERMANOVA
+#vegan::NMDS based on community matrix of vegan::PERMANOVA -> firstly do PERMANOVA then NMDS
 
 library(vegan)
 library(ggplot2)
