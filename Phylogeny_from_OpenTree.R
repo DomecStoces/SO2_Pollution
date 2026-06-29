@@ -3,7 +3,7 @@ library(dplyr)
 library(picante)
 library(ape)
 library(rotl)
-
+library(writexl)
 ### Step 1: Load and format data ###
 
 dat <- read_excel("Dataframe_FINAL.xlsx", sheet = "Sheet1") %>%
@@ -190,3 +190,16 @@ pd_res <- tibble::tibble(
   SESpd_richness = ses_rich$pd.obs.z,      
   SESpd_swap = ses_swap$pd.obs.z       
 )
+
+# Summary stats (using SESpd_richness as the primary metric for the summary)
+pd_res %>%
+  group_by(Period_2002) %>%
+  summarise(
+    n_samples = n(),
+    mean_richness = mean(Richness),
+    mean_SESpd_richness = mean(SESpd_richness),
+    .groups = "drop"
+  )
+
+# Download Excel file dataset 
+write_xlsx(pd_res,"Phylogenetic_diversity.xlsx")

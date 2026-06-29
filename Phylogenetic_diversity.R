@@ -5,17 +5,10 @@ library(mgcv)
 library(ggplot2)
 library(patchwork)
 
-### Step 1: Summaries and statistical tests ###
+### Read dataset ###
+sp_matrix <- read_excel("Dataframe_macrotemporal.xlsx", sheet = "Phylogenetic_diversity")
 
-# Summary stats (using SESpd_richness as the primary metric for the summary)
-pd_res %>%
-  group_by(Period_2002) %>%
-  summarise(
-    n_samples = n(),
-    mean_richness = mean(Richness),
-    mean_SESpd_richness = mean(SESpd_richness),
-    .groups = "drop"
-  )
+### Step 1: Summaries and statistical tests ###
 
 # Wilcoxon tests
 wilcox.test(SESpd_richness ~ Period_2002, data = pd_res)
